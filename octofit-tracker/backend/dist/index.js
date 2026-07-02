@@ -4,11 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const mongoose_1 = __importDefault(require("mongoose"));
 const api_1 = __importDefault(require("./routes/api"));
 const config_1 = require("./config");
+const database_1 = require("./config/database");
 const app = (0, express_1.default)();
-const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/octofit_db';
 app.use(express_1.default.json());
 app.get('/api/health', (_req, res) => {
     res.json({
@@ -18,8 +17,7 @@ app.get('/api/health', (_req, res) => {
     });
 });
 app.use('/api', api_1.default);
-mongoose_1.default
-    .connect(mongoUri)
+(0, database_1.connectDatabase)()
     .then(() => {
     console.log('Connected to MongoDB');
     app.listen(config_1.PORT, '0.0.0.0', () => {
